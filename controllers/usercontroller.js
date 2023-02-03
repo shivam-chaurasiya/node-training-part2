@@ -1,4 +1,5 @@
 const { default: mongoose } = require('mongoose');
+const userschema = require('../models/userschema');
 const User = require('../models/userschema');
 
 
@@ -75,28 +76,46 @@ const userdelete = (req,res,next)=>{
 }
 
 const userput = (req,res,next) =>{
-  console.log(req.params.id);
-  User.findOneAndUpdate({_id:req.params.id},{
-    $set:{
-    firstname:req.body.firstname,
-        lastname:req.body.lastname,
-        gender:req.body.gender,
-        email:req.body.email,
-        phone:req.body.phone
-    }
-  })
-  .then(result=>{
-    res.status(200).json({
-        updated:result
+    const userupdatebyid =mongoose.Types.ObjectId( req.params.id);
+    console.log(userupdatebyid);
+     // User.findOneAndUpdate({_id:req.params.id},{
+    //$set:{
+    //firstname:req.body.firstname,
+    //    lastname:req.body.lastname,
+    //    gender:req.body.gender,
+    //    email:req.body.email,
+    //    phone:req.body.phone
+    try{
+    const {firstname,lastname,gender,email,phone} = req.body;
+    let userofall = userschema.findOne(userupdatebyid);
+    userofall.firstname = firstname ? firstname : userofall.firstname;
+    userofall.lastname = lastname ? lastname : userofall.lastname;
+    userofall.gender = gender ? gender : userofall.gender;
+    userofall.email = email ? email : userofall.email;
+    userofall.phone = phone ? phone : userofall.phone;
+    //console.log(email);
+    //console.log(firstname);
+    console.log(userofall);
+    res.json({
+        message : 'Update user',
+        userofall
     })
-  })
-  .catch(err =>{
+    }
+
+ // })
+  //.then(result=>{
+  //  res.status(200).json({
+  //      updated:result
+  //  })
+  //})
+  catch(err){
     console.log(err);
     res.status(500).json({
         error:err
     })
-  })
+  }
 }
+
 
 module.exports = {
     userget,

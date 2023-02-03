@@ -8,7 +8,7 @@ const {userget,
 
 const checkauth = require('../middleware/usermid');
 
-router.get('/',checkauth,userget);
+router.get('/',userget);
 
 router.get('/:id',checkauth,usergetbyId);
 
